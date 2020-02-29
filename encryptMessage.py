@@ -26,7 +26,7 @@ class Encryptor(object):
 		with open(self.fileName,'w') as f:
 			json.dump(data,f)
 		return encrypted
-	def decrypt(self,encryptedMessage):
+	def decrypt(self,encryptedMessage,destroy = False):
 		# print(type(encryptedMessage))
 		with open(self.fileName) as f:
 			data = json.load(f)
