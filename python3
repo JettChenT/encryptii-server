@@ -1,0 +1,27 @@
+#Encrypt messages with AES 256
+from cryptography.fernet import Fernet
+import json
+
+class Encryptor(object):
+    def __init__(self,fileName):
+	self.fileName = fileName
+    def encrypt(self,message):
+	key = Fernet.generate_key()
+	f = Fernet(key)	
+	encoded = message.encode()
+	encrypted = f.encrypt(encoded)
+	hsh = self.generate_hash(encrypted)
+	with open(self.fileName) as f:
+	    data = json.load(f)
+	data[hsh] = {
+	    "key":key
+	}
+	with open(self.fileName) as f:
+	    json.dump(data,f)
+	return encrypted
+    def generate_hash(self,encrypted):
+	return encrypted
+
+if __name__ == '__main__':
+    enc = encryptor('data.json')
+    Encryptor.encrypt('I am batman')
