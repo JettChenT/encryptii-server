@@ -1,30 +1,35 @@
-#Encrypt messages with AES 256
+#Encrypt messages with fernet
 from cryptography.fernet import Fernet
 import json
+import os
+from store import Store
+import datetime
 # import pprint
 class Encryptor(object):
-	def __init__(self,fileName):
-		self.fileName = fileName
+	def __init__(self):
+		# self.fileName = fileName
+		self.dbUser = os.environ['API_USER']
+		self.dbPw = os.environ['API_PASSWORD']
+		self.st = Store(self.dbUser,self.dbPw)
 	def encrypt(self,message):
 		key = Fernet.generate_key()
 		f = Fernet(key)	
 		encoded = message.encode()
 		encrypted = f.encrypt(encoded)
 		hsh = self.generate_hash(encrypted)
-		with open(self.fileName) as f:
-			data = json.load(f)
 		_strkey = key.decode()
-		data[hsh] = {
-			"key":_strkey
+		doc = {
+			"hsh":hsh,
+			"key":_strkey,
+			"destroy":False,
+			"date":datetime.datetime.utcnow()
 		}
-		with open(self.fileName,'w') as f:
-			json.dump(data,f)
+		self.st.add(doc)
 		return encrypted
 	def decrypt(self,encryptedMessage,destroy = False):
-		with open(self.fileName) as f:
-			data = json.load(f)
 		hsh = self.generate_hash(encryptedMessage)
-		key = data[hsh]["key"].encode()
+		d = self.st.find({'hsh':hsh})
+		key = d['key'].encode()
 		f = Fernet(key)
 		_msg = encryptedMessage
 		res = f.decrypt(_msg).decode()

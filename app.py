@@ -4,7 +4,7 @@
 from flask import Flask,render_template,request
 from encryptMessage import Encryptor
 app = Flask(__name__)
-enc = Encryptor('data.json')
+enc = Encryptor()
 
 @app.route('/')
 def home():

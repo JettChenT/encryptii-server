@@ -6,7 +6,7 @@ class Encrypto(object):
         CLI encrypto object
     """
     def __init__(self):
-        self.encryptor = Encryptor('data.json')
+        self.encryptor = Encryptor()
     def encrypt(self,msg):
         encrypted = self.encryptor.encrypt(msg)
         res = encrypted.decode()
