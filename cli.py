@@ -11,9 +11,9 @@ class Encrypto(object):
         encrypted = self.encryptor.encrypt(msg)
         res = encrypted.decode()
         return res
-    def decrypt(self,encrypted):
+    def decrypt(self,encrypted,destroy = False):
         inp = encrypted.encode()
-        res = self.encryptor.decrypt(inp)
+        res = self.encryptor.decrypt(inp,destroy = destroy)
         return res
 
 if __name__ == "__main__":

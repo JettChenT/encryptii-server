@@ -8,8 +8,8 @@ import datetime
 class Encryptor(object):
 	def __init__(self):
 		# self.fileName = fileName
-		self.dbUser = os.environ['API_USER']
-		self.dbPw = os.environ['API_PASSWORD']
+		self.dbUser = os.environ.get('API_USER')
+		self.dbPw = os.environ.get('API_PASSWORD')
 		self.st = Store(self.dbUser,self.dbPw)
 	def encrypt(self,message):
 		key = Fernet.generate_key()
@@ -28,7 +28,10 @@ class Encryptor(object):
 		return encrypted
 	def decrypt(self,encryptedMessage,destroy = False):
 		hsh = self.generate_hash(encryptedMessage)
-		d = self.st.find({'hsh':hsh})
+		if destroy:
+			d = self.st.desFind({'hsh':hsh})
+		else:
+			d = self.st.find({'hsh':hsh})
 		key = d['key'].encode()
 		f = Fernet(key)
 		_msg = encryptedMessage
