@@ -14,7 +14,7 @@ def home():
 def encrypt():
     msg = request.form['message']
     encrypted_message = enc.encrypt(msg)
-    return encrypted_message
+    return render_template('dis_encrypted.html',msg=encrypted_message.decode())
 
 @app.route('/decrypt',methods=["POST"])
 def decrypt():
@@ -22,7 +22,7 @@ def decrypt():
     decrypted_message = enc.decrypt(msg)
     if decrypted_message == -1:
         return 'The message you seek is either never created or destroyed.'
-    return decrypted_message
+    return render_template('dis_decrypted.html',msg=decrypted_message)
 
 if __name__ == '__main__':
-    app.run(debug = True)
+    app.run()
