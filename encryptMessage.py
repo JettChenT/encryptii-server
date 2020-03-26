@@ -4,6 +4,7 @@ import json
 import os
 from store import Store
 import datetime
+import hashlib
 # import pprint
 class Encryptor(object):
 	def __init__(self):
@@ -38,7 +39,7 @@ class Encryptor(object):
 		res = f.decrypt(_msg).decode()
 		return res
 	def generate_hash(self,encrypted):
-		return encrypted.decode()
+		return hashlib.sha224(encrypted.encode()).hexdigest()
 
 # if __name__ == '__main__':
 # 	enc = Encryptor('data.json')
