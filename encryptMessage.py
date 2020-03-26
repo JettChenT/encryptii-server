@@ -39,7 +39,7 @@ class Encryptor(object):
 		res = f.decrypt(_msg).decode()
 		return res
 	def generate_hash(self,encrypted):
-		return hashlib.sha224(encrypted.encode()).hexdigest()
+		return hashlib.sha224(encrypted).hexdigest()
 
 # if __name__ == '__main__':
 # 	enc = Encryptor('data.json')
