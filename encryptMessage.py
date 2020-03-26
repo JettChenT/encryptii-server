@@ -33,6 +33,8 @@ class Encryptor(object):
 			d = self.st.desFind({'hsh':hsh})
 		else:
 			d = self.st.find({'hsh':hsh})
+		if d == {}:
+			return -1
 		key = d['key'].encode()
 		f = Fernet(key)
 		_msg = encryptedMessage
