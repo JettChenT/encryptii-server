@@ -20,6 +20,8 @@ def encrypt():
 def decrypt():
     msg = request.form['message'].encode()
     decrypted_message = enc.decrypt(msg)
+    if decrypted_message == -1:
+        return 'The message you seek is either never created or destroyed.'
     return decrypted_message
 
 if __name__ == '__main__':
