@@ -25,4 +25,4 @@ def decrypt():
     return render_template('dis_decrypted.html',msg=decrypted_message)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run()
