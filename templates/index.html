@@ -1,12 +1,29 @@
 {% extends "base.html" %}
-{% block title %}Index{% endblock %}
+{% block title %}Encrypto{% endblock %}
 {% block main %}
+<h1>Encrypto: end to end message encryption</h1>
+
 <form action="/encrypt" method="POST">
-    <span><b>Encrypt text:</b></span>
-    <input type="text" name="message">
+    <div class="ui action input">
+        <input type="text" name="message" placeholder="Text to encrypt...">
+        <button class="ui teal right labeled icon button">
+            <i class="lock icon"></i>
+            Encrypt
+        </button>
+    </div>
 </form>
 <form action="/decrypt" method="post">
-    <span><b>Decrypt text:</b></span>
-    <input type="text" name="message">
+    <div class="ui action input">
+        <input type="text" name="message" placeholder="Text to decrypt">
+        <button class="ui teal right labeled icon button">
+            <i class="unlock icon"></i>
+            Decrypt
+        </button>
+    </div>
 </form>
+<script>
+    function formSubmit(){
+        form.submit()
+    }
+</script>
 {% endblock %}
