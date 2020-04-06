@@ -2,7 +2,29 @@
 {% block title %}Encrypted message{% endblock %}
 {% block main %}
 <h2>The encrypted text:</h2>
+<style>
+    #dt{
+        margin-top: 30px;
+        width:50%;
+    }
+</style>
 <span>
-{{ msg }}
+    <div class="ui action input" id="dt">
+        <input type="text" value="{{ msg }}" id="res" readonly>
+        <button class="ui teal right labeled icon button" onclick="copyRes()">
+          <i class="copy icon"></i>
+            <span id="tcopy">Copy</span>
+        </button>
+      </div>
 </span>
+<script>
+    function copyRes(){
+        var copytext = document.getElementById("res");
+        copytext.select();
+        copytext.setSelectionRange(0,99999);
+        document.execCommand("copy");
+        var tcopy = document.getElementById("tcopy")
+        tcopy.innerHTML="Copied!"
+    }
+</script>
 {% endblock %}
