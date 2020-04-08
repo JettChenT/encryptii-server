@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 {% block title %}Encrypto{% endblock %}
 {% block main %}
-<h1>Encrypto: end to end message encryption</h1>
+
+<h1 id="title" class="animated pulse">Encrypto <br> end to end message encryption</h1>
 
 <form action="/encrypt" method="POST">
-    <div class="ui action input">
+    <div class="ui action input animated bounceInLeft">
         <input type="text" name="message" placeholder="Text to encrypt...">
         <button class="ui teal right labeled icon button">
             <i class="lock icon"></i>
@@ -13,7 +14,7 @@
     </div>
 </form>
 <form action="/decrypt" method="post">
-    <div class="ui action input">
+    <div class="ui action input animated bounceInRight">
         <input type="text" name="message" placeholder="Text to decrypt">
         <button class="ui teal right labeled icon button">
             <i class="unlock icon"></i>
