@@ -40,6 +40,10 @@ class Encryptor(object):
 		_msg = encryptedMessage
 		res = f.decrypt(_msg).decode()
 		return res
+	def destroy(self,encryptedMessage):
+		hsh = self.generate_hash(encryptedMessage)
+		fnd = self.st.desFind({'hsh':hsh})
+		return fnd != {}
 	def generate_hash(self,encrypted):
 		return hashlib.sha224(encrypted).hexdigest()
 
