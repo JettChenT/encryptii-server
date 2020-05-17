@@ -23,7 +23,7 @@ def encrypt():
 def decrypt():
     if request.method == "POST":
         msg = request.form['message'].encode()
-        decrypted_message = enc.decrypt(msg)
+        decrypted_message = enc.decrypt(msg,destroy=True)
         if decrypted_message == -1:
             return 'The message you seek is either never created or destroyed.'
         return render_template('dis_decrypted.html',msg=decrypted_message)
