@@ -1,10 +1,9 @@
 # Encrypto
 A text encryptor.  
-Work in progress.  
 Encryption method: Fernet, Fernet is a symmetrical encryption method so that a message would be very hard to decipher without the key  
 
 ## web app
-visit https://encrypto.jettchen.me
+visit https://go.jettchen.me/encrypto
 
 ## CLI version
 The cli version of encrypto is in cli.py.
