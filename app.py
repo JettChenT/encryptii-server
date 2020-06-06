@@ -1,7 +1,7 @@
 """
     The web version of encrypto (auto-redirect)
 """
-from flask import Flaskredirect
+from flask import redirect,Flask
 app = Flask(__name__)
 
 @app.route('/')
