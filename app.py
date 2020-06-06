@@ -1,5 +1,5 @@
 """
-    The web version of encrypto (auto-redirect)
+    The web version of Encryptii (auto-redirect)
 """
 from flask import redirect,Flask
 app = Flask(__name__)
