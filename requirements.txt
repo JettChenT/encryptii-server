@@ -1,4 +1,17 @@
-cryptography == 2.6.1
-flask == 1.0.2
-gunicorn == 19.9.0
-pymongo[tls,srv] == 3.7.2
+certifi==2020.4.5.1
+cffi==1.14.0
+click==7.1.2
+cryptography==2.9.2
+dnspython==1.16.0
+Flask==1.1.2
+gunicorn==20.0.4
+idna==2.9
+itsdangerous==1.1.0
+Jinja2==2.11.2
+MarkupSafe==1.1.1
+pycparser==2.20
+pymongo==3.9.0
+six==1.14.0
+Werkzeug==0.16.0
+flask-cors==3.0.8
+flask-restplus==0.13.0
