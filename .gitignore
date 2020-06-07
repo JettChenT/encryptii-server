@@ -133,3 +133,7 @@ dmypy.json
 .localized
 **/.DS_Store
 **/.localized
+
+.history/
+.github/
+bin/

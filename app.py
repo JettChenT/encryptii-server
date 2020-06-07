@@ -14,10 +14,11 @@ enc = Encryptor()
 class PingPong(Resource):
     def get(self):
         # easter egg/ test whether or not api is up
-        return {'ping': 'pong'},200
+        return {'ping': 'pong'}, 200
 
 
 @api.route("/encrypt")
+@api.doc(params={'msg': 'message to encrypt'})
 class EncryptionPage(Resource):
     def get(self):
         msg = request.args.get("msg")
@@ -26,11 +27,15 @@ class EncryptionPage(Resource):
         resp = {
             "encrypted": encrypted.decode()
         }
-        return resp
+        return resp, 200
 
 
 @api.route("/decrypt")
+@api.doc(params={'dec': 'encrypted message to decrypt', 'destroy': "destroys the message if this parameter is True"})
 class DecryptionPage(Resource):
+    @api.doc(responses={404: 'Message does not exist or was destroyed',
+                        200: 'Success'
+                        })
     def get(self):
         td = request.args.get("dec").encode()
         des = request.args.get("destroy")
@@ -38,10 +43,9 @@ class DecryptionPage(Resource):
         d = enc.decrypt(td, flag)
         print(td)
         if d == -1:
-            resp = dict(code=300, err_msg="Your message does not exist")
+            return dict(msg="Message does not exist or was destroyed"), 404
         else:
-            resp = dict(code=200, msg=str(d))
-        return resp
+            return dict(msg=str(d)), 200
 
 
 if __name__ == "__main__":
