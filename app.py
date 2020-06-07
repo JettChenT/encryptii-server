@@ -1,7 +1,7 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request
 from encryptMessage import Encryptor
 from flask_cors import CORS
-from flask_restplus import Resource, Api
+from flask_restx import Resource, Api
 
 api = Api()
 app = Flask(__name__)

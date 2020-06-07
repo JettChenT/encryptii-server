@@ -12,6 +12,6 @@ MarkupSafe==1.1.1
 pycparser==2.20
 pymongo==3.9.0
 six==1.14.0
-Werkzeug==0.16.0
+Werkzeug==1.0.1
 flask-cors==3.0.8
-flask-restplus==0.13.0
+flask-restx==0.2.0
