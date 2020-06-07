@@ -20,6 +20,9 @@ class PingPong(Resource):
 @api.route("/encrypt")
 @api.doc(params={'msg': 'message to encrypt'})
 class EncryptionPage(Resource):
+    """
+    Encryption
+    """
     def get(self):
         msg = request.args.get("msg")
         print(msg)
@@ -33,6 +36,9 @@ class EncryptionPage(Resource):
 @api.route("/decrypt")
 @api.doc(params={'dec': 'encrypted message to decrypt', 'destroy': "destroys the message if this parameter is True"})
 class DecryptionPage(Resource):
+    """
+    Decryption
+    """
     @api.doc(responses={404: 'Message does not exist or was destroyed',
                         200: 'Success'
                         })
@@ -47,6 +53,14 @@ class DecryptionPage(Resource):
         else:
             return dict(msg=str(d)), 200
 
+@api.route('/postman')
+class PostManJson(Resource):
+    """
+    return PostMan configuration json file
+    """
+    def get(self):
+        data = api.as_postman(urlvars=True, swagger=True)
+        return data
 
 if __name__ == "__main__":
     app.run(debug=True)
