@@ -23,6 +23,7 @@ class EncryptionPage(Resource):
     """
     Encryption
     """
+
     def get(self):
         msg = request.args.get("msg")
         print(msg)
@@ -39,13 +40,14 @@ class DecryptionPage(Resource):
     """
     Decryption
     """
+
     @api.doc(responses={404: 'Message does not exist or was destroyed',
                         200: 'Success'
                         })
     def get(self):
         td = request.args.get("dec").encode()
         des = request.args.get("destroy")
-        flag = (des == "True")
+        flag = (des == "True".capitalize())
         d = enc.decrypt(td, flag)
         print(td)
         if d == -1:
@@ -53,14 +55,17 @@ class DecryptionPage(Resource):
         else:
             return dict(msg=str(d)), 200
 
+
 @api.route('/postman')
 class PostManJson(Resource):
     """
     return PostMan configuration json file
     """
+
     def get(self):
         data = api.as_postman(urlvars=True, swagger=True)
         return data
+
 
 if __name__ == "__main__":
     app.run(debug=True)

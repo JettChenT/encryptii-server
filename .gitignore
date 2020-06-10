@@ -137,3 +137,4 @@ dmypy.json
 .history/
 .github/
 bin/
+.tmp/
