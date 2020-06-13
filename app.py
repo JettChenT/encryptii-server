@@ -2,6 +2,7 @@ from flask import Flask, request
 from encryptMessage import Encryptor
 from flask_cors import CORS
 from flask_restx import Resource, Api
+from json import loads
 
 api = Api()
 app = Flask(__name__)
@@ -66,6 +67,18 @@ class PostManJson(Resource):
         data = api.as_postman(urlvars=True, swagger=True)
         return data
 
+
+@api.route('/insomnia')
+class InsomniaJson(Resource):
+    '''
+    return Insomnia config JSON file
+    '''
+
+    def get(self):
+        f = open("insomnia.json", "r")
+        data = loads(f.read())
+        f.close()
+        return data
 
 if __name__ == "__main__":
     app.run(debug=True)
