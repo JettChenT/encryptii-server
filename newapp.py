@@ -68,7 +68,7 @@ async def decryption(pmt: decryptINP, response: Response):
     else:
         return {'msg': str(d)}
 
-@app.get('/decryption',status_code=status.HTTP_200_OK)
+@app.get('/decrypt',status_code=status.HTTP_200_OK)
 async def getDecryption(dec:str, response:Response, des:bool=True):
     dec = dec.encode()
     d = enc.decrypt(dec,des)
