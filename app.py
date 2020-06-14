@@ -1,84 +1,80 @@
-from flask import Flask, request
+from fastapi import FastAPI, Response, status
+from fastapi.middleware.cors import CORSMiddleware
+from starlette.responses import RedirectResponse
 from encryptMessage import Encryptor
-from flask_cors import CORS
-from flask_restx import Resource, Api
-from json import loads
+from pydantic import BaseModel
 
-api = Api()
-app = Flask(__name__)
-CORS(app)
-api.init_app(app)
+app = FastAPI()
 enc = Encryptor()
+origins = [
+    "http://127.0.0.1",
+    "https://encryptii.now.sh",
+    "https://encryptii-server.herokuapp.com"
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 
-@api.route('/ping')
-class PingPong(Resource):
-    def get(self):
-        # easter egg/ test whether or not api is up
-        return {'ping': 'pong'}, 200
+class encryptINP(BaseModel):
+    msg: str
+    auto_destroy: bool = False
 
 
-@api.route("/encrypt")
-@api.doc(params={'msg': 'message to encrypt'})
-class EncryptionPage(Resource):
-    """
-    Encryption
-    """
-
-    def get(self):
-        msg = request.args.get("msg")
-        print(msg)
-        encrypted = enc.encrypt(msg)
-        resp = {
-            "encrypted": encrypted.decode()
-        }
-        return resp, 200
+class decryptINP(BaseModel):
+    dec: str
+    destroy: bool = False
 
 
-@api.route("/decrypt")
-@api.doc(params={'dec': 'encrypted message to decrypt', 'destroy': "destroys the message if this parameter is True"})
-class DecryptionPage(Resource):
-    """
-    Decryption
-    """
+@app.get('/', status_code=status.HTTP_307_TEMPORARY_REDIRECT)
+async def routePage():
+    response=RedirectResponse(url='/docs')
+    return response
 
-    @api.doc(responses={404: 'Message does not exist or was destroyed',
-                        200: 'Success'
-                        })
-    def get(self):
-        td = request.args.get("dec").encode()
-        des = request.args.get("destroy")
-        flag = (des == "True".capitalize())
-        d = enc.decrypt(td, flag)
-        print(td)
-        if d == -1:
-            return dict(msg="Message does not exist or was destroyed"), 404
-        else:
-            return dict(msg=str(d)), 200
+@app.get('/ping')
+def pingpong():
+    return {'ping': 'pong'}
 
 
-@api.route('/postman')
-class PostManJson(Resource):
-    """
-    return PostMan configuration json file
-    """
+@app.post('/encrypt', status_code=status.HTTP_201_CREATED)
+async def encryption(pmt: encryptINP):
+    msg = pmt.msg
+    encrypted = enc.encrypt(msg)
+    resp = {
+        'encrypted': encrypted.decode()
+    }
+    return resp
 
-    def get(self):
-        data = api.as_postman(urlvars=True, swagger=True)
-        return data
+@app.get('/encrypt',status_code=status.HTTP_201_CREATED)
+async def getEncryption(msg:str):
+    encrypted = enc.encrypt(msg)
+    resp = {
+        "encrypted": encrypted.decode()
+    }
+    return resp
 
+@app.post('/decrypt', status_code=status.HTTP_200_OK)
+async def decryption(pmt: decryptINP, response: Response):
+    dec = pmt.dec.encode()
+    des = pmt.destroy
+    d = enc.decrypt(dec, des)
+    if d == -1:
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {'msg': "Message does not exist or was destroyed"}
+    else:
+        return {'msg': str(d)}
 
-@api.route('/insomnia')
-class InsomniaJson(Resource):
-    '''
-    return Insomnia config JSON file
-    '''
+@app.get('/decrypt',status_code=status.HTTP_200_OK)
+async def getDecryption(dec:str, response:Response, des:bool=True):
+    dec = dec.encode()
+    d = enc.decrypt(dec,des)
+    if d == -1:
+        response.status_code=status.HTTP_404_NOT_FOUND
+        return {'msg': "Message does not exist or was destroyed"}
+    else:
+        return {'msg':str(d)}
 
-    def get(self):
-        f = open("insomnia.json", "r")
-        data = loads(f.read())
-        f.close()
-        return data
-
-if __name__ == "__main__":
-    app.run(debug=True)
