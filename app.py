@@ -4,7 +4,9 @@ from starlette.responses import RedirectResponse
 from encryptMessage import Encryptor
 from pydantic import BaseModel
 
-app = FastAPI()
+app = FastAPI(
+    title="The encryptii api"
+)
 enc = Encryptor()
 origins = [
     "http://127.0.0.1",
@@ -23,6 +25,7 @@ app.add_middleware(
 class encryptINP(BaseModel):
     msg: str
     auto_destroy: bool = False
+    emoji: bool = False
 
 
 class decryptINP(BaseModel):
@@ -43,9 +46,9 @@ def pingpong():
 @app.post('/encrypt', status_code=status.HTTP_201_CREATED)
 async def encryption(pmt: encryptINP):
     msg = pmt.msg
-    encrypted = enc.encrypt(msg)
+    encrypted = enc.encrypt(msg, pmt.emoji)
     resp = {
-        'encrypted': encrypted.decode()
+        'encrypted': encrypted
     }
     return resp
 
@@ -53,7 +56,7 @@ async def encryption(pmt: encryptINP):
 async def getEncryption(msg:str):
     encrypted = enc.encrypt(msg)
     resp = {
-        "encrypted": encrypted.decode()
+        "encrypted": encrypted
     }
     return resp
 
