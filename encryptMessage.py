@@ -29,17 +29,13 @@ class Encryptor(object):
 		}
 		self.st.add(doc)
 		encrypted = encrypted.decode()
-		print(encrypted)
 		if emoji:
 			encrypted = self.conv.sentence_to_emoji(encrypted)
-		print(encrypted)
 		return encrypted
 	def decrypt(self,encryptedMessage,destroy = False):
 		em = encryptedMessage.decode()
 		if self.conv.is_emoji(em[0]):
-			print(em)
 			encryptedMessage = self.conv.emoji_to_sentence(em).encode()
-		print(encryptedMessage)
 		hsh = self.generate_hash(encryptedMessage)
 		if destroy:
 			d = self.st.desFind({'hsh':hsh})

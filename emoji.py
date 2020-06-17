@@ -27,12 +27,3 @@ class EmojiConverter(object):
         return newMsg
     def is_emoji(self,chr)->bool:
         return chr in self.emojList
-
-if __name__=='__main__':
-    conv = EmojiConverter('emojList.txt')
-    s = 'gAAAAABe6f9BdVCNEZ32u2OgQG1Q1y-s9JHua2wxNtt8BHkKt8bkPma6TEBBjPdkEVVqRSMDBVhZLcmxCQ9K-t1Oc4Gq1bBjIn3VQjGFV7JX9hOaBYKZXxLY4eKPiRhyHhpsgott5gmT'
-    s2 = conv.sentence_to_emoji(s)
-    s3 = conv.emoji_to_sentence(s2)
-    print(s==s3)
-    print(s)
-    print(s3)
