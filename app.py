@@ -30,7 +30,7 @@ class encryptINP(BaseModel):
 
 class decryptINP(BaseModel):
     dec: str
-    destroy: bool = False
+    destroy: bool = True
 
 
 @app.get('/', status_code=status.HTTP_307_TEMPORARY_REDIRECT)
