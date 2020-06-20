@@ -4,10 +4,8 @@ class Store(object):
     """
         Store message in mongodb server
     """
-    def __init__(self,user,pw):
-        self.client = pymongo.MongoClient("mongodb+srv://{us}:{password}@cluster0-ncuqi.mongodb.net/test?retryWrites"
-                                          "=true&w=majority"\
-            .format(us = user,password = pw))
+    def __init__(self,user,pw,url):
+        self.client = pymongo.MongoClient(url.format(us = user,password = pw))
         self.db = self.client.main
         self.collection = self.db.msgs
     def add(self,msg:dict):
