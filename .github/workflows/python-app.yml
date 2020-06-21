@@ -41,6 +41,6 @@ jobs:
 
     - name: pytest test application
       env:
-        API_URL: mongo://127.0.0.1:27017
+        API_URL: mongodb://127.0.0.1:27017
       run: |
         pytest test.py
