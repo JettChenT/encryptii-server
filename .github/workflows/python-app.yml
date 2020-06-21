@@ -13,7 +13,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        mongodb-version: [3.6, 4.0, 4.2]
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python 3.8
@@ -31,3 +33,17 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        mongodb-version: [3.6, 4.0, 4.2]
+
+    - name: Start MongoDB v${{ matrix.mongodb-version }}
+        uses: supercharge/mongodb-github-action@1.2.0
+        with:
+          mongodb-version: ${{ matrix.mongodb-version }}
+        run: |
+          echo "MongoDB set up"
+
+    - name: pytest test application
+        env: |
+          API_URL: mongo://127.0.0.1:27017
+        run: |
+          pytest test.py

@@ -4,8 +4,11 @@ class Store(object):
     """
         Store message in mongodb server
     """
-    def __init__(self,user,pw,url):
-        self.client = pymongo.MongoClient(url.format(us = user,password = pw))
+    def __init__(self,url,user=0,pw=0):
+        if user == None and pw==None:
+            self.client = pymongo.MongoClient(url)
+        else:
+            self.client = pymongo.MongoClient(url.format(us = user,password = pw))
         self.db = self.client.main
         self.collection = self.db.msgs
     def add(self,msg:dict):

@@ -12,10 +12,14 @@ from emoji import EmojiConverter
 class Encryptor(object):
     def __init__(self):
         # self.fileName = fileName
-        self.dbUser = os.environ.get('API_USER')
-        self.dbPw = os.environ.get('API_PASSWORD')
+        try:
+            self.dbUser = os.environ.get('API_USER')
+            self.dbPw = os.environ.get('API_PASSWORD')
+        except:
+            self.dbUser = None
+            self.dbPw = None
         self.dbUrl = os.environ.get('API_URL')
-        self.st = Store(self.dbUser, self.dbPw, self.dbUrl)
+        self.st = Store(self.dbUrl,self.dbUser,self.dbPw)
         self.conv = EmojiConverter('emojList.txt')
 
     def encrypt(self, message, emoji=False):
