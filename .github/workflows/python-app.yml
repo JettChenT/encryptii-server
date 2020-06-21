@@ -41,7 +41,7 @@ jobs:
         mongodb-version: ${{ matrix.mongodb-version }}
 
     - name: pytest test application
-      env: |
+      env:
         API_URL: mongo://127.0.0.1:27017
       run: |
         pytest test.py
