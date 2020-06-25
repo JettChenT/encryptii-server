@@ -13,14 +13,14 @@ class Encryptor(object):
     def __init__(self):
         # self.fileName = fileName
         try:
-            self.dbUser = os.environ.get('API_USER')
-            self.dbPw = os.environ.get('API_PASSWORD')
+            self.dbUser = os.environ.get("API_USER")
+            self.dbPw = os.environ.get("API_PASSWORD")
         except:
             self.dbUser = None
             self.dbPw = None
-        self.dbUrl = os.environ.get('API_URL')
-        self.st = Store(self.dbUrl,self.dbUser,self.dbPw)
-        self.conv = EmojiConverter('emojList.txt')
+        self.dbUrl = os.environ.get("API_URL")
+        self.st = Store(self.dbUrl, self.dbUser, self.dbPw)
+        self.conv = EmojiConverter("emojList.txt")
 
     def encrypt(self, message, emoji=False):
         key = Fernet.generate_key()
@@ -33,7 +33,7 @@ class Encryptor(object):
             "hsh": hsh,
             "key": _strkey,
             "destroy": False,
-            "date": datetime.datetime.utcnow()
+            "date": datetime.datetime.utcnow(),
         }
         self.st.add(doc)
         encrypted = encrypted.decode()
@@ -47,12 +47,12 @@ class Encryptor(object):
             encryptedMessage = self.conv.emoji_to_sentence(em).encode()
         hsh = self.generate_hash(encryptedMessage)
         if destroy:
-            d = self.st.desFind({'hsh': hsh})
+            d = self.st.desFind({"hsh": hsh})
         else:
-            d = self.st.find({'hsh': hsh})
+            d = self.st.find({"hsh": hsh})
         if d == None:
             return -1
-        key = d['key'].encode()
+        key = d["key"].encode()
         f = Fernet(key)
         _msg = encryptedMessage
         res = f.decrypt(_msg).decode()
@@ -60,11 +60,12 @@ class Encryptor(object):
 
     def destroy(self, encryptedMessage):
         hsh = self.generate_hash(encryptedMessage)
-        fnd = self.st.desFind({'hsh': hsh})
+        fnd = self.st.desFind({"hsh": hsh})
         return fnd != {}
 
     def generate_hash(self, encrypted):
         return hashlib.sha224(encrypted).hexdigest()
+
 
 # if __name__ == '__main__':
 # 	enc = Encryptor('data.json')
