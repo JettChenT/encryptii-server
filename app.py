@@ -8,7 +8,7 @@ app = FastAPI(title="The encryptii api")
 enc = Encryptor()
 origins = [
     "http://127.0.0.1",
-    "https://encryptii.now.sh",
+    "https://encryptii.vercel.app",
     "https://encryptii-server.herokuapp.com",
 ]
 app.add_middleware(
