@@ -64,7 +64,7 @@ class Encryptor(object):
         return fnd != {}
 
     def generate_hash(self, encrypted):
-        return hashlib.sha224(encrypted).hexdigest()
+        return hashlib.sha256(encrypted).hexdigest()
 
 
 # if __name__ == '__main__':
