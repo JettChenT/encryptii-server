@@ -1,4 +1,3 @@
-# Encrypt messages with fernet
 from cryptography.fernet import Fernet
 import json
 import os
@@ -9,10 +8,18 @@ from emoji import EmojiConverter
 import snappy
 
 
-# import pprint
+def generate_hash(encrypted) -> str:
+    # generate sha256 hash for text
+    return hashlib.sha256(encrypted).hexdigest()
+
+
 class Encryptor(object):
+    """
+        The Encryptor object, handles encryption and decryption
+    """
+
     def __init__(self):
-        # self.fileName = fileName
+        # process mongodb environs
         try:
             self.dbUser = os.environ.get("API_USER")
             self.dbPw = os.environ.get("API_PASSWORD")
@@ -20,18 +27,24 @@ class Encryptor(object):
             self.dbUser = None
             self.dbPw = None
         self.dbUrl = os.environ.get("API_URL")
+        # Add store object to interact with the database
         self.st = Store(self.dbUrl, self.dbUser, self.dbPw)
+        # Emoji converter
         self.conv = EmojiConverter("emojList.txt")
 
-
-    def encrypt(self, message, emoji=False):
+    def encrypt(self, message, emoji=False)->str:
+        # Use fernet to generate key
         key = Fernet.generate_key()
         f = Fernet(key)
+        # Compress the intended message via snappy
         encoded = snappy.compress(message)
+        # The encryption
         encrypted = f.encrypt(encoded)
-        hsh = self.generate_hash(encrypted)
-        salt = os.urandom(32)
+        # Generate the hash of the encrypteds tring
+        hsh = generate_hash(encrypted)
+        # decoded key to store in mongodb
         _strkey = key.decode()
+        # Store data in mongodb
         doc = {
             "hsh": hsh,
             "key": _strkey,
@@ -40,22 +53,26 @@ class Encryptor(object):
             "date": datetime.datetime.utcnow(),
         }
         self.st.add(doc)
+        # Return the encrypted message
         encrypted = encrypted.decode()
         if emoji:
             encrypted = self.conv.sentence_to_emoji(encrypted)
         return encrypted
 
-    def decrypt(self, encryptedMessage, destroy=False):
+    def decrypt(self, encryptedMessage, destroy=False)->str:
+        # hashing the message
         em = encryptedMessage.decode()
         if self.conv.is_emoji(em[0]):
             encryptedMessage = self.conv.emoji_to_sentence(em).encode()
-        hsh = self.generate_hash(encryptedMessage)
+        hsh = generate_hash(encryptedMessage)
+        # Find the dataset in mongodb
         if destroy:
             d = self.st.desFind({"hsh": hsh})
         else:
             d = self.st.find({"hsh": hsh})
         if d == None:
             return -1
+        # decrypt with key
         key = d["key"].encode()
         f = Fernet(key)
         _msg = encryptedMessage
@@ -63,16 +80,7 @@ class Encryptor(object):
         res = snappy.decompress(res).decode()
         return res
 
-    def destroy(self, encryptedMessage):
-        hsh = self.generate_hash(encryptedMessage)
+    def destroy(self, encryptedMessage) -> bool:
+        hsh = generate_hash(encryptedMessage)
         fnd = self.st.desFind({"hsh": hsh})
         return fnd != {}
-
-    def generate_hash(self, encrypted):
-        return hashlib.sha256(encrypted).hexdigest()
-
-
-# if __name__ == '__main__':
-# 	enc = Encryptor('data.json')
-# 	_encrypted = enc.encrypt('I am batman')
-# 	enc.decrypt(_encrypted)
