@@ -6,6 +6,7 @@ from store import Store
 import datetime
 import hashlib
 from emoji import EmojiConverter
+import snappy
 
 
 # import pprint
@@ -22,17 +23,20 @@ class Encryptor(object):
         self.st = Store(self.dbUrl, self.dbUser, self.dbPw)
         self.conv = EmojiConverter("emojList.txt")
 
+
     def encrypt(self, message, emoji=False):
         key = Fernet.generate_key()
         f = Fernet(key)
-        encoded = message.encode()
+        encoded = snappy.compress(message)
         encrypted = f.encrypt(encoded)
         hsh = self.generate_hash(encrypted)
+        salt = os.urandom(32)
         _strkey = key.decode()
         doc = {
             "hsh": hsh,
             "key": _strkey,
             "destroy": False,
+            "compress": "snappy",
             "date": datetime.datetime.utcnow(),
         }
         self.st.add(doc)
@@ -55,7 +59,8 @@ class Encryptor(object):
         key = d["key"].encode()
         f = Fernet(key)
         _msg = encryptedMessage
-        res = f.decrypt(_msg).decode()
+        res = f.decrypt(_msg)
+        res = snappy.decompress(res).decode()
         return res
 
     def destroy(self, encryptedMessage):
