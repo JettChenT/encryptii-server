@@ -8,6 +8,7 @@ app = FastAPI(title="The encryptii api")
 enc = Encryptor()
 origins = [
     "http://127.0.0.1",
+    "http://localhost:3000",
     "https://encryptii.vercel.app",
     "https://encryptii-server.herokuapp.com",
 ]
