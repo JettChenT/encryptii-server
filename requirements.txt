@@ -29,4 +29,3 @@ uvloop==0.14.0
 websockets==8.1
 Werkzeug==1.0.1
 zipp==3.1.0
-python-snappy == 0.5.4

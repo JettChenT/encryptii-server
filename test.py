@@ -4,8 +4,6 @@ from fastapi.testclient import TestClient
 from app import app
 
 client = TestClient(app)
-import pytest
-
 
 def getRandLetter():
     return chr(random.randint(ord("a"), ord("z")))

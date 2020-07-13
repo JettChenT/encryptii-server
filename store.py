@@ -7,7 +7,7 @@ class Store(object):
     """
 
     def __init__(self, url, user=0, pw=0):
-        if user == None and pw == None:
+        if user == 0 and pw == 0:
             self.client = pymongo.MongoClient(url)
         else:
             self.client = pymongo.MongoClient(url.format(us=user, password=pw))
@@ -17,10 +17,10 @@ class Store(object):
     def add(self, msg: dict):
         self.collection.insert_one(msg)
 
-    def find(self, exp: dict):
+    def find(self, exp: dict)->dict:
         doc = self.collection.find_one(exp)
         return doc
 
-    def desFind(self, exp: dict):
+    def desFind(self, exp: dict)->dict:
         doc = self.collection.find_one_and_delete(exp)
         return doc

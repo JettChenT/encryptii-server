@@ -5,7 +5,7 @@ from store import Store
 import datetime
 import hashlib
 from emoji import EmojiConverter
-import snappy
+import zlib
 
 
 def generate_hash(encrypted) -> str:
@@ -24,8 +24,8 @@ class Encryptor(object):
             self.dbUser = os.environ.get("API_USER")
             self.dbPw = os.environ.get("API_PASSWORD")
         except:
-            self.dbUser = None
-            self.dbPw = None
+            self.dbUser = 0
+            self.dbPw = 0
         self.dbUrl = os.environ.get("API_URL")
         # Add store object to interact with the database
         self.st = Store(self.dbUrl, self.dbUser, self.dbPw)
@@ -36,8 +36,8 @@ class Encryptor(object):
         # Use fernet to generate key
         key = Fernet.generate_key()
         f = Fernet(key)
-        # Compress the intended message via snappy
-        encoded = snappy.compress(message)
+        # Compress the intended message via zlib
+        encoded = zlib.compress(message.encode())
         # The encryption
         encrypted = f.encrypt(encoded)
         # Generate the hash of the encrypteds tring
@@ -49,7 +49,7 @@ class Encryptor(object):
             "hsh": hsh,
             "key": _strkey,
             "destroy": False,
-            "compress": "snappy",
+            "compress": "zlib",
             "date": datetime.datetime.utcnow(),
         }
         self.st.add(doc)
@@ -77,7 +77,7 @@ class Encryptor(object):
         f = Fernet(key)
         _msg = encryptedMessage
         res = f.decrypt(_msg)
-        res = snappy.decompress(res).decode()
+        res = zlib.decompress(res).decode()
         return res
 
     def destroy(self, encryptedMessage) -> bool:
