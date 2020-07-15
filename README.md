@@ -12,8 +12,8 @@ This repo contains the API server.
 
 ## Using the API
 
-[TBD]
-
+[docs(swagger)](https://encryptii-server.herokuapp.com/docs)
+[docs(redoc)](https://encryptii-server.herokuapp.com/)
 ## Technique
 
 [TBD]
