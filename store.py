@@ -7,7 +7,7 @@ class Store(object):
     """
 
     def __init__(self, url, user=0, pw=0):
-        if user == 0 and pw == 0:
+        if (not user) or (not pw):
             self.client = pymongo.MongoClient(url)
         else:
             self.client = pymongo.MongoClient(url.format(us=user, password=pw))

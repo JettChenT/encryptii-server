@@ -1,3 +1,4 @@
+import re
 from fastapi import FastAPI, Response, status
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.responses import RedirectResponse
@@ -9,8 +10,7 @@ enc = Encryptor()
 origins = [
     "http://127.0.0.1",
     "http://localhost:3000",
-    "https://encryptii.vercel.app",
-    "https://encryptii-server.herokuapp.com",
+    "https://.*"
 ]
 app.add_middleware(
     CORSMiddleware,
